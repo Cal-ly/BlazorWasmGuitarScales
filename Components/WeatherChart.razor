@@ -1,0 +1,140 @@
+﻿@using ChartJs.Blazor
+@using ChartJs.Blazor.Charts
+@using ChartJs.Blazor.Util
+@using ChartJs.Blazor.ChartJS
+@using ChartJs.Blazor.ChartJS.Common
+@using ChartJs.Blazor.ChartJS.Common.Properties
+@using ChartJs.Blazor.ChartJS.Common.Axes
+@using ChartJs.Blazor.ChartJS.Common.Enums
+@using ChartJs.Blazor.ChartJS.Common.Utils
+@using ChartJs.Blazor.ChartJS.Common.Wrappers
+@using ChartJs.Blazor.ChartJS.Common.Axes.Ticks
+@using ChartJs.Blazor.ChartJS.Common.Handlers
+@using ChartJs.Blazor.ChartJS.Common.Time
+@using ChartJs.Blazor.ChartJS.LineChart
+@using BlazorWasmGuitarScales.Models
+@using BlazorWasmGuitarScales.Services
+@inject IJSRuntime JSRuntime
+@inject WeatherService WeatherService
+
+<h3>3-Day Forecast</h3>
+
+@if (forecast is null)
+{
+    <p>Loading forecast...</p>
+}
+else
+{
+    <RawChartJS Id="weatherChart" Config="chartConfig" />
+}
+
+@code {
+    private WeatherResponse? forecast;
+    private object? chartConfig;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            forecast = await WeatherService.GetWeatherDataAsync("Copenhagen", 3);
+
+            if (forecast?.Forecast?.Forecastday is not null)
+            {
+                BuildChart();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading forecast: {ex.Message}");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && forecast != null)
+        {
+            await JSRuntime.InvokeVoidAsync("setupChart", "weatherChart", chartConfig);
+        }
+    }
+
+    private void BuildChart()
+    {
+        var labels = forecast!.Forecast!.Forecastday!.Select(d => d.Date).ToList();
+        var avg = forecast.Forecast.Forecastday!.Select(d => d.Day?.Avgtemp_C ?? 0).ToList();
+        var min = forecast.Forecast.Forecastday!.Select(d => d.Day?.Mintemp_C ?? 0).ToList();
+        var max = forecast.Forecast.Forecastday!.Select(d => d.Day?.Maxtemp_C ?? 0).ToList();
+
+        chartConfig = new
+        {
+            type = "line",
+            data = new
+            {
+                labels = labels,
+                datasets = new[]
+                {
+                    new {
+                        label = "Avg Temp",
+                        backgroundColor = "rgb(109, 133, 159)",
+                        borderColor = "rgb(109, 133, 159)",
+                        data = avg
+                    },
+                    new {
+                        label = "Min Temp",
+                        backgroundColor = "rgb(203, 214, 218)",
+                        borderColor = "rgb(203, 214, 218)",
+                        data = min
+                    },
+                    new {
+                        label = "Max Temp",
+                        backgroundColor = "rgb(247, 255, 255)",
+                        borderColor = "rgb(247, 255, 255)",
+                        data = max
+                    }
+                }
+            },
+            options = new
+            {
+                responsive = true,
+                title = new
+                {
+                    display = true,
+                    text = "Temperature (°C)",
+                    fontColor = "#f7ffff"
+                },
+                legend = new
+                {
+                    labels = new
+                    {
+                        fontColor = "#f7ffff"
+                    }
+                },
+                scales = new
+                {
+                    xAxes = new[]
+                    {
+                        new {
+                            ticks = new
+                            {
+                                fontColor = "#f7ffff"
+                            }
+                        }
+                    },
+                    yAxes = new[]
+                    {
+                        new {
+                            ticks = new
+                            {
+                                fontColor = "#f7ffff"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("destroyChart", "weatherChart");
+    }
+}

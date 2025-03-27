@@ -1,0 +1,20 @@
+﻿@using BlazorWasmGuitarScales.Models
+@using BlazorWasmGuitarScales.Services
+@using BlazorWasmGuitarScales.Components
+@inject WeatherService WeatherService
+@page "/weatherforecast"
+
+<PageTitle>Weather Forecast</PageTitle>
+
+<h1>Weather for Denmark</h1>
+
+<div>
+    <BlazorWasmGuitarScales.Components.WeatherTable />
+</div>
+<div>
+    <BlazorWasmGuitarScales.Components.WeatherChart />
+</div>
+
+@code {
+
+}
