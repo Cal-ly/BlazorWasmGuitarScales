@@ -3,7 +3,7 @@
 @using System.Text.Json
 @inject WeatherService WeatherService
 
-<h3>Current Weather and 3-Day Forecast</h3>
+<h3>5-Day Forecast @weatherResponse?.Location?.Name</h3>
 
 @if (errorMessage != null)
 {
@@ -11,33 +11,32 @@
 }
 else if (weatherResponse != null)
 {
-    <h4>Current Weather</h4>
-    <p>City: @weatherResponse.Location?.Name</p>
-    <p>Temperature: @weatherResponse.Current?.Temp_C &deg;C</p>
-    <p>Feels Like: @weatherResponse.Current?.Feelslike_C &deg;C</p>
-    <p>Condition: @weatherResponse.Current?.Condition?.Text</p>
-    <p>Humidity: @weatherResponse.Current?.Humidity %</p>
-
-    <h4>3-Day Forecast</h4>
-    <table class="table">
-        <thead>
+    <table class="table table-bordered table-hover table-striped table-dark table-responsive-sm table-sm">
+        <thead class="thead-dark">
             <tr>
                 <th>Date</th>
                 <th>Avg Temp (°C)</th>
-                <th>Min Temp (°C)</th>
-                <th>Max Temp (°C)</th>
+                <th>Precipitation (mm)</th>
+                <th>Avg Humid (%)</th>
                 <th>Condition</th>
             </tr>
         </thead>
         <tbody>
+            <tr>
+                <td> @weatherResponse.Location?.Localtime </td>
+                <td> @weatherResponse.Current?.Temp_C &deg;C </td>
+                <td> @weatherResponse.Current?.Precip_Mm mm </td>
+                <td> @weatherResponse.Current?.Humidity % </td>
+                <td><img src="@weatherResponse.Current?.Condition?.Icon" alt="@weatherResponse.Current?.Condition?.Text" /></td>
+            </tr>
             @foreach (var day in weatherResponse.Forecast?.Forecastday ?? Enumerable.Empty<ForecastDay>())
             {
                 <tr>
                     <td>@day.Date</td>
                     <td>@day.Day?.Avgtemp_C</td>
-                    <td>@day.Day?.Mintemp_C</td>
-                    <td>@day.Day?.Maxtemp_C</td>
-                    <td>@day.Day?.Condition?.Text</td>
+                    <td>@day.Day?.Totalprecip_Mm mm</td>
+                    <td>@day.Day?.Avghumidity %</td>
+                    <td><img src="@day.Day?.Condition?.Icon" alt="@day.Day?.Condition?.Text"/></td>
                 </tr>
             }
         </tbody>
@@ -56,7 +55,7 @@ else
     {
         try
         {
-            weatherResponse = await WeatherService.GetWeatherDataAsync("copenhagen", 3); // Adjust the number of days as needed
+            weatherResponse = await WeatherService.GetWeatherDataAsync("copenhagen", 5); // Adjust the number of days as needed
         }
         catch (Exception ex)
         {

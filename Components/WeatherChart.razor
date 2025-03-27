@@ -17,7 +17,7 @@
 @inject IJSRuntime JSRuntime
 @inject WeatherService WeatherService
 
-<h3>3-Day Forecast</h3>
+<h3>Temperatur Interval</h3>
 
 @if (forecast is null)
 {
@@ -32,11 +32,17 @@ else
     private WeatherResponse? forecast;
     private object? chartConfig;
 
+    public string colorText = "#f7ffff";
+    public string colorIcon = "#cbd6da";
+    public string colorPrimary = "#6d859f";
+    public string colorHover = "#cbd6da";
+    public string colorBg = "#14222d";
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            forecast = await WeatherService.GetWeatherDataAsync("Copenhagen", 3);
+            forecast = await WeatherService.GetWeatherDataAsync("Copenhagen", 5);
 
             if (forecast?.Forecast?.Forecastday is not null)
             {
@@ -63,6 +69,7 @@ else
         var avg = forecast.Forecast.Forecastday!.Select(d => d.Day?.Avgtemp_C ?? 0).ToList();
         var min = forecast.Forecast.Forecastday!.Select(d => d.Day?.Mintemp_C ?? 0).ToList();
         var max = forecast.Forecast.Forecastday!.Select(d => d.Day?.Maxtemp_C ?? 0).ToList();
+        var hourlyTemp = forecast.Forecast.Forecastday!.SelectMany(d => d.Hour!).Select(h => h.Temp_C).ToList();
 
         chartConfig = new
         {
@@ -99,13 +106,13 @@ else
                 {
                     display = true,
                     text = "Temperature (°C)",
-                    fontColor = "#f7ffff"
+                    fontColor = "#6d859f"
                 },
                 legend = new
                 {
                     labels = new
                     {
-                        fontColor = "#f7ffff"
+                        fontColor = "#6d859f"
                     }
                 },
                 scales = new
@@ -115,7 +122,7 @@ else
                         new {
                             ticks = new
                             {
-                                fontColor = "#f7ffff"
+                                fontColor = "#6d859f"
                             }
                         }
                     },
@@ -124,7 +131,7 @@ else
                         new {
                             ticks = new
                             {
-                                fontColor = "#f7ffff"
+                                fontColor = "#6d859f"
                             }
                         }
                     }
