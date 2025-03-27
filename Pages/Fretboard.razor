@@ -3,53 +3,57 @@
 
 <PageTitle>Fretboard</PageTitle>
 
-<h1>Fretboard</h1>
+<div class="container w-100 d-flex justify-content-center align-items-start" style="height: 100vh;">
+    <div>
+        <h1>Fretboard</h1>
 
-<div class="controls">
-    <label>
-        Key:
-        <select @onchange="OnRootChanged" value="@selectedRoot">
-            @foreach (var key in rootOptions)
-            {
-                <option value="@key">@FormatNote(key)</option>
-            }
-        </select>
-    </label>
-    <label>
-        Scale:
-        <select @onchange="OnScaleChanged" value="@selectedScale">
-            @foreach (var scale in scaleOptions)
-            {
-                <option value="@scale">@scale</option>
-            }
-        </select>
-    </label>
-</div>
+        <div class="controls">
+            <label>
+                Key:
+                <select @onchange="OnRootChanged" value="@selectedRoot">
+                    @foreach (var key in rootOptions)
+                    {
+                        <option value="@key">@FormatNote(key)</option>
+                    }
+                </select>
+            </label>
+            <label>
+                Scale:
+                <select @onchange="OnScaleChanged" value="@selectedScale">
+                    @foreach (var scale in scaleOptions)
+                    {
+                        <option value="@scale">@scale</option>
+                    }
+                </select>
+            </label>
+        </div>
 
-<div class="fretboard">
-    <div class="fret-marker-row">
-        @for (int fret = 0; fret <= NumberOfFrets; fret++)
-        {
-            <div class="fret-marker">
-                @if (markerFrets.Contains(fret))
+        <div class="fretboard">
+            <div class="fret-marker-row">
+                @for (int fret = 0; fret <= NumberOfFrets; fret++)
                 {
-                    <span>@(fret == 12 ? "••" : "•")</span>
+                    <div class="fret-marker">
+                        @if (markerFrets.Contains(fret))
+                        {
+                            <span>@(fret == 12 ? "••" : "•")</span>
+                        }
+                    </div>
                 }
             </div>
-        }
-    </div>
 
-    @foreach (var stringPair in fretboard)
-    {
-        <div class="string-row">
-            @foreach (var note in stringPair.Value)
+            @foreach (var stringPair in fretboard)
             {
-                <div class="fret @GetNoteCss(note)">
-                    <span>@FormatNote(note)</span>
+                <div class="string-row">
+                    @foreach (var note in stringPair.Value)
+                    {
+                        <div class="fret @GetNoteCss(note)">
+                            <span>@FormatNote(note)</span>
+                        </div>
+                    }
                 </div>
             }
         </div>
-    }
+    </div>
 </div>
 
 @code {

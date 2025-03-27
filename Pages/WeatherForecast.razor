@@ -6,13 +6,14 @@
 
 <PageTitle>Weather Forecast</PageTitle>
 
-<h1>Weather for Denmark</h1>
-
-<div class="p-5">
-    <BlazorWasmGuitarScales.Components.WeatherTable />
-</div>
-<div class="p-5">
-    <BlazorWasmGuitarScales.Components.WeatherChart />
+<div class="container w-100 d-flex justify-content-center align-items-start" style="height: 100vh;">
+    <div>
+        <h1>Weather for Denmark</h1>
+        <br />
+        <BlazorWasmGuitarScales.Components.WeatherTable />
+        <br />
+        <BlazorWasmGuitarScales.Components.WeatherChart />
+    </div>
 </div>
 
 @code {
