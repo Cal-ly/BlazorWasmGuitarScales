@@ -48,17 +48,29 @@ else
 }
 
 @code {
+    /// <summary>
+    /// The weather response data.
+    /// </summary>
     private WeatherResponse? weatherResponse;
+
+    /// <summary>
+    /// The error message to display if an error occurs.
+    /// </summary>
     private string? errorMessage;
 
+    /// <summary>
+    /// Called when the component is initialized.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            weatherResponse = await WeatherService.GetWeatherDataAsync("copenhagen", 5); // Adjust the number of days as needed
+            // Fetch weather data for Copenhagen for the next 5 days.
+            weatherResponse = await WeatherService.GetWeatherDataAsync("copenhagen", 5);
         }
         catch (Exception ex)
         {
+            // Set the error message if an exception occurs.
             errorMessage = ex.Message;
         }
     }

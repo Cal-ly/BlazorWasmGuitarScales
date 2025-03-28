@@ -1,9 +1,38 @@
 ﻿@page "/about"
+@using Markdig
+@inject HttpClient HttpClient
 
-<div class="container w-100 d-flex justify-content-center align-items-start" style="height: 100vh;">
-    <div>
-        <h1>About</h1>
-        <p>Welcome to GuitarScaleApp! This application helps guitar enthusiasts learn and practice various guitar scales. Explore different scales, practice with interactive tools, and improve your guitar skills.</p>
+<div class="container w-100 d-flex justify-content-center align-items-start" style="height: 100vh;">  
+    <div>  
+        <h1>About</h1>  
+        <p>Welcome to GuitarScaleApp! This application helps guitar enthusiasts learn and practice various guitar scales. Explore different scales, practice with interactive tools, and improve your guitar skills.</p>  
         <p>Also there is a weather forecast, so you can check if you need to go outside and get some sunshine :D </p>
-    </div>
-</div>
+        
+        <br />
+
+        <h1>ReadMe.md</h1>
+        <div class="markdown-content">
+            @((MarkupString)readmeHtml)
+        </div>
+    </div>  
+</div>  
+
+@code {
+    private string readmeHtml = string.Empty;
+
+    private string pathToReadme = "docs/README.md"; // relative to wwwroot
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            string readmeString = await HttpClient.GetStringAsync("docs/README.md");
+            var pipeline = new MarkdownPipelineBuilder().Build();
+            readmeHtml = Markdown.ToHtml(readmeString, pipeline);
+        }
+        catch (HttpRequestException)
+        {
+            readmeHtml = "<p><em>README.md could not be loaded. Check if it exists under wwwroot/docs/.</em></p>";
+        }
+    }
+}

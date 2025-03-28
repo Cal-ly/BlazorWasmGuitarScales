@@ -1,7 +1,13 @@
 ﻿namespace BlazorWasmGuitarScales.ChartConfig;
 
+/// <summary>
+/// Provides configuration for a line chart.
+/// </summary>
 public static class LineChartConfig
 {
+    /// <summary>
+    /// Gets the configuration object for the line chart.
+    /// </summary>
     public static object Config => new
     {
         Type = "line",

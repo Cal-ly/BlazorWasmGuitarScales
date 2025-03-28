@@ -3,7 +3,11 @@
 ## Overview
 
 BlazorWasmGuitarScales is a Blazor WebAssembly application designed to help users visualize guitar scales. The app leverages Blazor's component-based architecture to provide a rich, interactive user experience directly in the browser without the need for a server-side component.
-Currently the app can be viewed at [Guitar Scales](https://ambitious-plant-04398c103.6.azurestaticapps.net/), hosted on Azure
+Currently the app can is hosted on Azure and can be viewed at:
+
+
+[**Guitar Scales App**](https://ambitious-plant-04398c103.6.azurestaticapps.net/)
+
 
 ## Progressive Web App (PWA)
 

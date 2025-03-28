@@ -29,21 +29,36 @@ else
 }
 
 @code {
+    /// <summary>
+    /// The weather forecast data.
+    /// </summary>
     private WeatherResponse? forecast;
+
+    /// <summary>
+    /// The configuration object for the chart.
+    /// </summary>
     private object? chartConfig;
 
+    /// <summary>
+    /// Color settings for the chart.
+    /// </summary>
     public string colorText = "#f7ffff";
     public string colorIcon = "#cbd6da";
     public string colorPrimary = "#6d859f";
     public string colorHover = "#cbd6da";
     public string colorBg = "#14222d";
 
+    /// <summary>
+    /// Called when the component is initialized.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            // Fetch weather data for Copenhagen for the next 5 days.
             forecast = await WeatherService.GetWeatherDataAsync("Copenhagen", 5);
 
+            // If forecast data is available, build the chart.
             if (forecast?.Forecast?.Forecastday is not null)
             {
                 BuildChart();
@@ -55,14 +70,22 @@ else
         }
     }
 
+    /// <summary>
+    /// Called after the component has been rendered.
+    /// </summary>
+    /// <param name="firstRender">Indicates if this is the first render.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && forecast != null)
         {
+            // Initialize the chart using JavaScript.
             await JSRuntime.InvokeVoidAsync("setupChart", "weatherChart", chartConfig);
         }
     }
 
+    /// <summary>
+    /// Builds the chart configuration object.
+    /// </summary>
     private void BuildChart()
     {
         var labels = forecast!.Forecast!.Forecastday!.Select(d => d.Date).ToList();
@@ -140,6 +163,10 @@ else
         };
     }
 
+    /// <summary>
+    /// Disposes the chart when the component is disposed.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         await JSRuntime.InvokeVoidAsync("destroyChart", "weatherChart");

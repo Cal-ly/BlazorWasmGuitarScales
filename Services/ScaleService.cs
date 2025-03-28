@@ -1,7 +1,13 @@
 ﻿namespace BlazorWasmGuitarScales.Services;
 
+/// <summary>
+/// Provides services for working with musical scales.
+/// </summary>
 public static class ScaleService
 {
+    /// <summary>
+    /// Gets the chromatic scale notes.
+    /// </summary>
     public static NoteName[] Chromatic => Enum.GetValues<NoteName>();
 
     private static readonly Dictionary<ScaleType, List<ScaleStep>> ScalePatterns = new()
@@ -11,15 +17,36 @@ public static class ScaleService
         { ScaleType.Pentatonic,new() { ScaleStep.Whole, ScaleStep.Whole, ScaleStep.WholeHalf, ScaleStep.Whole, ScaleStep.WholeHalf } }
     };
 
+    /// <summary>
+    /// Gets the available keys.
+    /// </summary>
+    /// <returns>A list of available keys.</returns>
     public static List<NoteName> GetAvailableKeys() => Chromatic.ToList();
+
+    /// <summary>
+    /// Gets the available scales.
+    /// </summary>
+    /// <returns>A list of available scales.</returns>
     public static List<ScaleType> GetAvailableScales() => ScalePatterns.Keys.ToList();
 
+    /// <summary>
+    /// Gets the note from the root note with a specified semitone offset.
+    /// </summary>
+    /// <param name="rootNote">The root note.</param>
+    /// <param name="semitoneOffset">The semitone offset.</param>
+    /// <returns>The note at the specified semitone offset from the root note.</returns>
     public static NoteName GetNoteFrom(NoteName rootNote, int semitoneOffset)
     {
         int startIndex = (int)rootNote;
         return Chromatic[(startIndex + semitoneOffset) % 12];
     }
 
+    /// <summary>
+    /// Gets the notes in a specified scale.
+    /// </summary>
+    /// <param name="root">The root note of the scale.</param>
+    /// <param name="scale">The type of scale.</param>
+    /// <returns>A set of notes in the specified scale.</returns>
     public static HashSet<NoteName> GetScaleNotes(NoteName root, ScaleType scale)
     {
         if (!ScalePatterns.TryGetValue(scale, out var steps)) return [];
@@ -44,6 +71,9 @@ public static class ScaleService
     }
 }
 
+/// <summary>
+/// Represents musical note names.
+/// </summary>
 public enum NoteName
 {
     C = 0,
@@ -60,6 +90,9 @@ public enum NoteName
     B = 11
 }
 
+/// <summary>
+/// Represents types of musical scales.
+/// </summary>
 public enum ScaleType
 {
     Major,
@@ -67,6 +100,9 @@ public enum ScaleType
     Pentatonic
 }
 
+/// <summary>
+/// Represents steps in a musical scale.
+/// </summary>
 public enum ScaleStep
 {
     None,
