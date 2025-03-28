@@ -20,13 +20,13 @@
 @code {
     private string readmeHtml = string.Empty;
 
-    private string pathToReadme = "docs/README.md"; // relative to wwwroot
+    private string pathToReadme = "wwwroot/docs/README.md"; // relative to wwwroot
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            string readmeString = await HttpClient.GetStringAsync("docs/README.md");
+            string readmeString = await HttpClient.GetStringAsync(pathToReadme);
             var pipeline = new MarkdownPipelineBuilder().Build();
             readmeHtml = Markdown.ToHtml(readmeString, pipeline);
         }

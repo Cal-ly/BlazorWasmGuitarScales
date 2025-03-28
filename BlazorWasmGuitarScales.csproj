@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,14 +7,6 @@
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <UserSecretsId>1010bea7-01f8-41f0-a50a-aa8cc572ffd7</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="wwwroot\README.md" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\docs\README.md" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ChartJs.Blazor" Version="1.1.0" />
@@ -29,5 +21,9 @@
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
+
+  <Target Name="CopyReadmeToDocs" AfterTargets="Build">
+    <Copy SourceFiles="README.md" DestinationFolder="wwwroot/docs" />
+  </Target>
 
 </Project>
